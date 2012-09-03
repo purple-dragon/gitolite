@@ -88,6 +88,12 @@ $GL_PERFLOGT="$GL_ADMINDIR/logs/perf-gitolite-%y-%m.log";
 $REPO_BASE="repositories";
 
 # ------------------------------------------------------------------------------
+# Wild repo can be created by clone or by push. If set $GL_REPO_CREATE_BY_CLONE
+# to 1, create new repo by clone, or by push. Create by clone is convenient but
+# may create lots of unwanted repos by  trash repo by accident.
+$GL_REPO_CREATE_BY_CLONE = 0;
+
+# ------------------------------------------------------------------------------
 # DO NOT TOUCH ANY THING AFTER THIS LINE
 # ------------------------------------------------------------------------------
 
