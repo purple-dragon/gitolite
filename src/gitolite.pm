@@ -1127,7 +1127,11 @@ sub setup_authkeys
 
         my $user = $pubkey;
         $user =~ s(.*/)();                  # foo/bar/baz.pub -> baz.pub
-        $user =~ s/(\@[^.]+)?\.pub$//;      # baz.pub, baz@home.pub -> baz
+        if ($GL_EMAIL_ALIKE_PUBKEY_MAPUSER) {
+            $user =~ s/(\@.+)?\.pub$//;     # baz.pub, baz@home.pub, baz@example.com.pub -> baz
+        } else {
+            $user =~ s/(\@[^.]+)?\.pub$//;  # baz.pub, baz@home.pub -> baz
+        }
 
         # lint check 2 -- don't print right now; just collect the messages
         push @not_in_config, "$user($pubkey)" if %$user_list_p and not $user_list_p->{$user};

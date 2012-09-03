@@ -94,6 +94,10 @@ $REPO_BASE="repositories";
 $GL_REPO_CREATE_BY_CLONE = 0;
 
 # ------------------------------------------------------------------------------
+# set to 1, email alike pubkey, like baz@example.com.pub will map to baz.
+$GL_EMAIL_ALIKE_PUBKEY_MAPUSER = 1;
+
+# ------------------------------------------------------------------------------
 # DO NOT TOUCH ANY THING AFTER THIS LINE
 # ------------------------------------------------------------------------------
 
