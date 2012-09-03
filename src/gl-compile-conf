@@ -332,9 +332,14 @@ sub parse_conf_file
 
     my @repos;
     my $line;
+    my $bomb_checked = 0;
     while (<$conf_fh>)
     {
         $line = cleanup_conf_line($_);
+        if ($bomb_checked eq 0) {
+            $line =~ s/^\xEF\xBB\xBF//;
+            $bomb_checked++;
+        }
         # skip blank lines
         next unless $line =~ /\S/;
 
