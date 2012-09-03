@@ -137,7 +137,7 @@ fi
 # authkeys etc., because in this case it seems appropriate
 (
     cd $HOME
-    mkdir -p .ssh
+    mkdir -p -m700 .ssh
     chmod go-rwx .ssh
     touch .ssh/authorized_keys
     chmod go-w . .ssh .ssh/authorized_keys
