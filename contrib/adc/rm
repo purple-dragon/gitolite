@@ -30,8 +30,23 @@ opt $ARE_YOU_SURE && {
     [ $s = "yes" ] || die aborting...
 }
 
-rm -rf $repo.git
-echo "$repo is now GONE!"
+repo_sandbox="$(cd ..; pwd)/repositories-sandbox"
+if test -d "$repo_sandbox"
+then
+    (cd $repo_sandbox; mkdir -p ${repo%/*})
+    renamed_repo=$repo_sandbox/$repo.git
+    if test -d "$renamed_repo"
+    then
+        renamed_repo=$repo_sandbox/$repo.git-$(date +"%Y%m%d%H%M%S")
+    fi
+    echo "repo moved to $renamed_repo"
+    mv "$repo.git" "$renamed_repo"
+else
+    echo "Warning: Create a sandbox dir -- $repo_sandbox to hold the obsolte repox."
+    echo "         or the repo $repo will be deleted permanently."
+    rm -rf "$repo.git"
+    echo "$repo is now GONE!"
+fi
 
 # gitweb specific; code for cgit users left as an exercise for the reader
 cd $HOME
