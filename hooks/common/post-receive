@@ -1,0 +1,14 @@
+#!/bin/sh
+
+if test -x hooks/post-receive-email
+then
+   hooks/post-receive-email
+elif test -e hooks/post-receive-email
+then
+   sh hooks/post-receive-email
+fi
+
+if test -e hooks/post-receive.mirrorpush
+then
+   exec hooks/post-receive.mirrorpush
+fi
