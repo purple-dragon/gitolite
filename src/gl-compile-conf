@@ -459,6 +459,16 @@ sub do_normal_repos
     }
 }
 
+sub escape_dollar
+{
+    my ($dumped_data) = shift;
+    # Escape dollar character in Double-Quote strings.
+    $dumped_data =~ s/(\$)(creator|readers|writers|gl_user)/!#!$2/g;
+    $dumped_data =~ s/(?<=[^\\])\$(?=[^'"\s]*?")/\\\$/g;
+    $dumped_data =~ s/(!#!)(creator|readers|writers|gl_user)/\$$2/g;
+    return $dumped_data;
+}
+
 sub write_1_compiled_conf
 {
     # warning: writes and *deletes* it from %repos and %git_configs
@@ -480,6 +490,8 @@ sub write_1_compiled_conf
     # the dump uses single quotes, but we convert any strings containing $creator
     # and $gl_user to double quoted strings.  A bit sneaky, but not too much...
     $dumped_data =~ s/'(?=[^']*\$(?:creator|gl_user))~?(.*?)'/"$1"/g;
+    # escape dollar character (regex special char) in the double quoted strings,
+    $dumped_data = escape_dollar($dumped_data);
     print $compiled_fh $dumped_data;
     close $compiled_fh;
 
@@ -496,11 +508,15 @@ sub write_compiled_conf
     # the dump uses single quotes, but we convert any strings containing $creator
     # and $gl_user to double quoted strings.  A bit sneaky, but not too much...
     $dumped_data =~ s/'(?=[^']*\$(?:creator|gl_user))~?(.*?)'/"$1"/g;
+    # escape dollar character (regex special char) in the double quoted strings,
+    $dumped_data = escape_dollar($dumped_data);
     print $compiled_fh $dumped_data;
     if (%groups) {
         $dumped_data = Data::Dumper->Dump([\%groups], [qw(*groups)]);
         $dumped_data =~ s/\bCREAT[EO]R\b/\$creator/g;
         $dumped_data =~ s/'(?=[^']*\$(?:creator|gl_user))~?(.*?)'/"$1"/g;
+        # escape dollar character (regex special char) in the double quoted strings,
+        $dumped_data = escape_dollar($dumped_data);
         print $compiled_fh $dumped_data;
     }
     print $compiled_fh Data::Dumper->Dump([\%split_conf], [qw(*split_conf)]) if %split_conf;
