@@ -26,11 +26,11 @@ setup_environment();
 
 # mkdir $REPO_BASE, $GL_ADMINDIR if they don't already exist
 wrap_mkdir($REPO_BASE);
-wrap_mkdir( $GL_ADMINDIR, 0700 );
+wrap_mkdir( $GL_ADMINDIR, 0750 );
 
 # mkdir $GL_ADMINDIR's subdirs
 for my $dir (qw(conf keydir logs hooks hooks/common hooks/gitolite-admin)) {
-    wrap_mkdir( "$GL_ADMINDIR/$dir", 0700 );
+    wrap_mkdir( "$GL_ADMINDIR/$dir", 0750 );
 }
 
 # hooks must be propagated to all the repos in case they changed
