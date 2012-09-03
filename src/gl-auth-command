@@ -131,6 +131,9 @@ unless ( $verb and ( $verb eq 'git-init' or $verb =~ $R_COMMANDS or $verb =~ $W_
 die "$repo ends with a slash; I don't like that\n" if $repo =~ /\/$/;
 die "$repo has two consecutive periods; I don't like that\n" if $repo =~ /\.\./;
 
+# map repo from A to B
+$repo = map_repo($GL_CONF_COMPILED, $repo);
+
 # save the reponame; too many things need this
 $ENV{GL_REPO}=$repo;
 
