@@ -33,6 +33,7 @@ use lib $ENV{GL_BINDIR};
 use gitolite_rc;
 use gitolite_env;
 use gitolite;
+use gitolite qw(:DEFAULT %git_configs);
 
 setup_environment();
 die "fatal: GL_HOSTNAME not set in rc; mirroring disabled\n" unless $GL_HOSTNAME;
@@ -119,8 +120,18 @@ if ($soc =~ /^git-receive-pack '(\S+)'$/) {
     # is a server-to-server transaction, with an authenticated sender.
     # Authorisation consists of checking to make sure our config says this
     # sender is indeed the master for this repo
-    die "$ABRT fatal: $GL_HOSTNAME <==//== $sender mirror-push rejected: $repo is $mm\n" unless $mm eq "slave of $sender";
+    die "$ABRT fatal: $GL_HOSTNAME <==//== $sender mirror-push rejected: $repo is $mm\n" unless $mm eq "slave of $sender" or $mm eq "missing";
     print STDERR "$GL_HOSTNAME <=== ($repo) ==== $sender\n";
+    if ($mm eq "missing") {
+        wrap_chdir($REPO_BASE);
+        # check repo_rights, and bring necessary git_config from wild repo.
+        repo_rights($repo);
+        new_repo($repo, "$GL_ADMINDIR/hooks/common");
+        # note pwd is now the bare "repo.git"; new_repo does that...
+        setup_git_configs($repo, \%git_configs);
+        setup_daemon_access($repo);
+        wrap_chdir($ENV{HOME});
+    }
 
     $ENV{GL_BYPASS_UPDATE_HOOK} = 1;
     $ENV{GL_REPO} = $repo;

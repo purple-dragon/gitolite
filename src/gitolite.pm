@@ -1289,6 +1289,8 @@ sub try_adc {
 sub mirror_mode {
     my $repo = shift;
 
+    # if repository not exist, set to 'missing'
+    return 'missing' if ! -d "$REPO_BASE/$repo.git";
     # 'local' is the default if the config is empty or not set
     my $gmm = `git config --file $REPO_BASE/$repo.git/config --get gitolite.mirror.master` || 'local';
     chomp $gmm;
