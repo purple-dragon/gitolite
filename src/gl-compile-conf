@@ -450,6 +450,7 @@ sub do_normal_repos
     for my $repo (sort @repos) {
         next unless $repo =~ $REPONAME_PATT;    # skip repo patterns
         next if $repo =~ m(^\@|EXTCMD/);        # skip groups and fake repos
+        next if $GL_WILDREPOS and ( $repo =~ /(^\^|\$$)/ or $repo =~ /\.(\*|\+)/ ); # is wild repos
 
         unless ($GL_NO_CREATE_REPOS) {
             unless (-d "$repo.git") {
