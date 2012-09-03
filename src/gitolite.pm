@@ -27,6 +27,7 @@ use Exporter 'import';
     slurp
     special_cmd
     try_adc
+    wild_repo_rights
     wrap_mkdir
     wrap_chdir
     wrap_open
@@ -838,6 +839,9 @@ sub add_repo_conf
         }
 
         if ($exists) {
+            if ($creator and $creator eq $ENV{GL_USER}) {
+                $perm = ' %R %W';
+            }
             if ($creator and $wild) {
                 $creator = "($creator)";
             } elsif ($creator and not $wild) {
@@ -849,7 +853,8 @@ sub add_repo_conf
             }
         } else {
             # repo didn't exist; C perms need to be filled in
-            $perm = ( $repos{$repo}{C}{'@all'} ? ' @C' : ( $repos{$repo}{C}{$ENV{GL_USER}} ? ' =C' : '   ' )) if $GL_WILDREPOS;
+            # PUSH to create needs user has both C and RW rights.
+            $perm = ( $repos{$repo}{C}{'@all'} ? ' @C  @R  @W' : ( $repos{$repo}{C}{$ENV{GL_USER}} ? ' =C  %R  %W' : '   ' )) if $GL_WILDREPOS;
             # if you didn't have perms to create it, delete the "convenience"
             # copy of the ACL that parse_acl makes
             delete $repos{$repo} if $perm !~ /C/ and $wild;

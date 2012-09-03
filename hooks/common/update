@@ -75,9 +75,25 @@ push @allowed_refs, @ { $repos{'@all'}       {$ENV{GL_USER}} || [] };
 push @allowed_refs, @ { $repos{$ENV{GL_REPO}}{'@all'} || [] };
 push @allowed_refs, @ { $repos{'@all'}       {'@all'} || [] };
 
-# first check the main ref (this is a *real* ref, like refs/heads/master, and
-# is what we print in the log)
-my $log_refex = check_ref(\@allowed_refs, $ENV{GL_REPO}, $ref, $att_acc);
+my $log_refex = '';
+
+# we potentially have many "refs" to check.  The one we print in the log is
+# the *first* one (which is a *real* ref, like refs/heads/master), while all
+# the rest (if they exist) are like NAME/something.  So we do the first one
+# separately to capture it, then run the rest (if any)
+my ($creatorid, %dummy) = wild_repo_rights($ENV{GL_REPO}, "");
+
+# bypass auth check of *real* ref if user is creater.
+# As when do check_ref, if no permission, exist (die) directly.
+#
+# Always check if repo is a normal repo ($creatorid eq ''), or a repo created
+# by current user.
+if ($ENV{GL_USER} ne $creatorid or $creatorid eq "")
+{
+    # first check the main ref (this is a *real* ref, like refs/heads/master, and
+    # is what we print in the log)
+    $log_refex = check_ref(\@allowed_refs, $ENV{GL_REPO}, $ref, $att_acc);
+}
 
 # then we check all virtual refs
 check_vrefs(\@allowed_refs, $ENV{GL_REPO}, $att_acc);
