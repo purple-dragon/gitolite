@@ -1,0 +1,37 @@
+#!/bin/sh
+#
+# Publish contents in html-pub branche to deply directory,
+# just like gh-pages branch as to GitHub.
+#
+# To enable this hook, rename this file to "post-update".
+
+# Do git-update-server-info for git dumb protocol.
+dumb=$(git config --bool hooks.update-server-info || echo "false")
+if [ "$dumb" = "true" ]; then
+    git update-server-info
+fi
+
+LOCATION=.LOCATION
+DEPLOY=/var/lib/gitolite/deploy
+
+while [ $# -gt 0 ]; do
+    case "${1#refs/heads/}" in
+    html-pub)
+        target=$(git show $1:$LOCATION 2>/dev/null || echo "$GL_REPO")
+        if [ -n "$target" ]; then
+            target=${target#/}
+            target=$DEPLOY/$target
+            mkdir -p "$target"
+            echo >&2 "checkout to $target..."
+            ORIG_HEAD=$(git symbolic-ref HEAD)
+            git symbolic-ref HEAD $1
+            git --work-tree="$target" reset -q --hard
+            git symbolic-ref HEAD ${ORIG_HEAD}
+        else
+            echo >&2 "File '$LOCATION' not found in branch '${1#refs/heads/}'."
+        fi
+        break
+        ;;
+    esac
+    shift
+done
