@@ -162,11 +162,29 @@ gl-install -q
 
 [ -f $GL_ADMINDIR/conf/gitolite.conf ] || {
     echo "
+        @admin = $admin_name
+
         repo    gitolite-admin
-                RW+     =   $admin_name
+                RW+     =   @admin
+                R       =   @all
+
+        repo    users/CREATOR/[a-zA-Z].*
+                C   =  @all
+                RW+ =  CREATOR
+                RW  =  WRITERS
+                R   =  READERS @admin
+
+        # repo description for testing repo on gitweb
+        testing \"admin\" = \"sandbox, everyone can push\"
 
         repo    testing
-                RW+     =   @all
+                #config hooks.mailinglist  = testing-commit@list.foo.bar
+                #config hooks.announcelist = testing-commit@list.foo.bar
+                RW+CD                     = @admin
+                -     refs/tags/v[0-9]    = @all
+                RWC   refs/tags/          = @all
+                RW    master              = @all
+                RW+CD refs/heads/u/USER/  = @all
     " | cut -c9- > $GL_ADMINDIR/conf/gitolite.conf
 }
 [ -n "$pubkey_file" ] && cp $pubkey_file $GL_ADMINDIR/keydir

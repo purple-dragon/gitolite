@@ -46,17 +46,22 @@ $GL_NO_DAEMON_NO_GITWEB = 0;
 # ------------------------------------------------------------------------------
 # $GL_ALL_READ_ALL = 0;
 $GIT_PATH="";
-$GL_GITCONFIG_KEYS = "";
+# Available git config settings for repo. Keys gitolite.mirror.* is used for repo mirror
+$GL_GITCONFIG_KEYS = "core\\.logAllRefUpdates core\\..*compression gitolite\\..* hooks\\..*";
 $GL_NO_CREATE_REPOS = 0;
 $GL_NO_SETUP_AUTHKEYS = 0;
 # $GL_WILDREPOS_DEFPERMS = 'R @all';
 $HTPASSWD_FILE = "";
 $RSYNC_BASE = "";
-$SVNSERVE = "";
+# Gitolite can also be used to gate access (though not at a fine grained level)
+# to SVN if needed, passing authentication information on to `svnserve`. 
+$SVNSERVE = "/usr/bin/svnserve -r /opt/svn/svnroot/ -t --tunnel-user=%u";
 # $UPDATE_CHAINS_TO = "hooks/update.secondary";
 # $ADMIN_POST_UPDATE_CHAINS_TO = "hooks/post-update.secondary";
-# $GL_ADC_PATH = "";
+# Admin defined command path
+$GL_ADC_PATH = $ENV{HOME} . "/adc-bin";
 # $GL_GET_MEMBERSHIPS_PGM = "/usr/local/bin/expand-ldap-user-to-groups"
+# Unauthenticated HTTP users are actually authenticated as this user.
 # $GL_HTTP_ANON_USER = "mob";
 # $GL_REF_OR_FILENAME_PATT=qr(^[0-9a-zA-Z][0-9a-zA-Z._\@/+ :,-]*$);
 
@@ -75,7 +80,7 @@ $GL_WILDREPOS_PERM_CATS = "READERS WRITERS";
 # rarely changed variables
 # ------------------------------------------------------------------------------
 $GL_LOGT="$GL_ADMINDIR/logs/gitolite-%y-%m.log";
-# $GL_PERFLOGT="$GL_ADMINDIR/logs/perf-gitolite-%y-%m.log";
+$GL_PERFLOGT="$GL_ADMINDIR/logs/perf-gitolite-%y-%m.log";
 
 # ------------------------------------------------------------------------------
 # variables that should NOT be changed after the install step completes
