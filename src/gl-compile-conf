@@ -466,7 +466,7 @@ sub do_normal_repos
                 ln_sf("$GL_ADMINDIR/hooks/common", "*", "$repo.git/hooks");
                 # in case of package install, GL_ADMINDIR is no longer the top cop;
                 # override with the package hooks
-                ln_sf("$GL_PACKAGE_HOOKS/common", "*", "$repo.git/hooks") if $GL_PACKAGE_HOOKS;
+                #ln_sf("$GL_PACKAGE_HOOKS/common", "*", "$repo.git/hooks") if $GL_PACKAGE_HOOKS;
             }
         }
 

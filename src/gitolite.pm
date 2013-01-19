@@ -310,7 +310,7 @@ sub new_repo
     ln_sf($hooks_dir, "*", "hooks");
     # in case of package install, GL_ADMINDIR is no longer the top cop;
     # override with the package hooks
-    ln_sf("$GL_PACKAGE_HOOKS/common", "*", "hooks") if $GL_PACKAGE_HOOKS;
+    #ln_sf("$GL_PACKAGE_HOOKS/common", "*", "hooks") if $GL_PACKAGE_HOOKS;
     chmod 0755, "hooks/update";
 
     # run gitolite's post-init hook if you can.  GL_REPO will be correct on a

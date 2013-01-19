@@ -49,13 +49,13 @@ for my $repo (`find . -type d -name "*.git" -prune`) {
     # propagate user hooks
     ln_sf( "$GL_ADMINDIR/hooks/common", "*", "$repo/hooks" );
     # propagate package hooks, overriding user hooks
-    ln_sf( "$GL_PACKAGE_HOOKS/common", "*", "$repo/hooks" );
+    #ln_sf( "$GL_PACKAGE_HOOKS/common", "*", "$repo/hooks" );
     chmod 0755, "$repo/hooks/update";
 }
 
 # (special!) gitolite-admin repo, post-update hook, package hook only
 if ( -d "gitolite-admin.git/hooks" ) {
-    ln_sf( "$GL_PACKAGE_HOOKS/gitolite-admin", "post-update", "gitolite-admin.git/hooks" );
+    ln_sf( "$GL_ADMINDIR/hooks/gitolite-admin", "post-update", "gitolite-admin.git/hooks" );
     chmod 0755, "gitolite-admin.git/hooks/post-update";
 }
 
