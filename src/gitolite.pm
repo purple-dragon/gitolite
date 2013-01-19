@@ -33,6 +33,7 @@ use Exporter 'import';
     wrap_chdir
     wrap_open
     wrap_print
+    wrap_copy
 
     mirror_mode
     mirror_listslaves
@@ -103,6 +104,15 @@ our %one_git_config;    # ditto for %git_configs
 # ----------------------------------------------------------------------------
 #       convenience subs
 # ----------------------------------------------------------------------------
+
+sub wrap_copy
+{
+    my($srcdir, $glob, $dstdir) = @_;
+    for my $file ( glob("$srcdir/$glob") ){
+        $file =~ s/$srcdir\///;
+        system("cp", "$srcdir/$file", "$dstdir/");
+    }
+}
 
 sub wrap_mkdir
 {

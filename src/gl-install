@@ -35,6 +35,10 @@ for my $dir (qw(conf keydir logs hooks hooks/common hooks/gitolite-admin)) {
 
 # hooks must be propagated to all the repos in case they changed
 
+# copy all gitolite package hooks to user hooks
+wrap_copy("$GL_PACKAGE_HOOKS/common", "*", "$GL_ADMINDIR/hooks/common");
+wrap_copy("$GL_PACKAGE_HOOKS/gitolite-admin", "*", "$GL_ADMINDIR/hooks/gitolite-admin");
+
 # See http://sitaramc.github.com/gitolite/hook_prop.html if you're not sure
 # what is happening here, especially the picture toward the end.
 
