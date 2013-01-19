@@ -1,6 +1,6 @@
 #!/bin/bash
 
-GL_PACKAGE_CONF=/usr/share/gitolite/conf
+GL_PACKAGE_CONF=/tmp/share/gitolite/conf
 # must be the same as the value for the same variable in
 # $GL_PACKAGE_CONF/example.gitolite.rc.  Sorry about the catch-22 :)
 
